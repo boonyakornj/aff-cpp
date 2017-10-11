@@ -1,6 +1,8 @@
 // Need to run on g++ version not greater than 4.8
 
+#include <fstream>
 #include "VideoDetector.h"
+#include <boost/filesystem.hpp>
 
 using namespace affdex;
 using namespace std;
@@ -17,8 +19,14 @@ int main(int argc, char ** argsv)
   VideoDetector detector(processFrameRate, maxNumFaces, faceConfig);  // using default value because of `undefined reference error`
 
   // Configure the detector
-  std::string classifierPath = "/home/boonyakorn/affdex-sdk/data";
+  string classifierPath = "/home/boonyakorn/affdex-sdk/data";
   detector.setClassifierPath(classifierPath);
+
+  // Initialize output file
+  boost::filesystem::path csvPath(videoPath);
+  boost::filesystem::path fileExt = csvPath.extension();
+  csvPath.replace_extension(".csv");
+  std::ofstream csvFileStream(csvPath.c_str());
 
   // Choose classifiers
   detector.setDetectSmile(true);
